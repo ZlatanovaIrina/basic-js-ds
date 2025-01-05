@@ -1,4 +1,5 @@
 const { NotImplementedError } = require('../extensions/index.js');
+const { Queue } = require('../src/queue.js');
 
 // const { ListNode } = require('../extensions/list-node.js');
 
@@ -24,21 +25,17 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 
 function removeKFromList(l, k) {
-  
-  while (l.value === k) {
+
+  const lWithoutK = new Queue();
+
+  while (l) {
+    if (l.value !== k) {
+      lWithoutK.enqueue(l.value);
+    }
     l = l.next;
   }
 
-  let current = l.next;
-  
-  while (current) {
-    if (current.value === k) {
-      l.next.next = current.next;
-    } 
-      current = current.next;
-  } 
-  return l;
-
+  return lWithoutK.getUnderlyingList();
 }
 
 module.exports = {
