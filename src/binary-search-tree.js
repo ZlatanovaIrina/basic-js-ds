@@ -11,9 +11,6 @@ class BinarySearchTree {
 
   static findNode(data, rootNode) {
 
-    console.debug('data', data);
-    console.debug('root', rootNode);
-
     let root = rootNode;
 
     while(root) {
@@ -23,12 +20,12 @@ class BinarySearchTree {
 
       if (data < root.data) {
         root = root.left;
-        return;
+        continue;
       }
 
       if (data > root.data) {
         root = root.right;
-        return;
+        continue;
       }
      }
      
@@ -40,30 +37,40 @@ class BinarySearchTree {
   }
 
   add(data) {
+    const rootNode = this.rootNode;
+    
     if (!this.rootNode) {
       this.rootNode = new Node(data);
       return;
     }
- 
-    if (data < this.rootNode.data) {
-      // if (this.rootNode.left) {
-      //   this.rootNode = this.rootNode.left;
-      //   this.add(data);
-      // }
-      this.rootNode.left = new Node(data);
-      return;
-    }
-    if (data > this.rootNode.data) {
-      // if (this.rootNode.right) {
-      //   this.rootNode = this.rootNode.right;
-      //   this.add(data);
-      // }
-      this.rootNode.right = new Node(data);
-      return;
+
+    while (this.rootNode) {
+
+      if (data < this.rootNode.data) {       
+        if (this.rootNode.left) {
+          this.rootNode = this.rootNode.left;
+          continue;
+        }
+        this.rootNode.left = new Node(data);
+        this.rootNode = rootNode;
+        break;
+      }
+
+      if (data > this.rootNode.data) {
+        if (this.rootNode.right) {
+          this.rootNode = this.rootNode.right;
+          continue;
+        }
+        this.rootNode.right = new Node(data);
+        this.rootNode = rootNode;
+        break;
+      }
     }
   }
 
   has(data) {
+    console.debug('has', data);
+    
     return Boolean(BinarySearchTree.findNode(data, this.rootNode));
   }
 
@@ -72,6 +79,34 @@ class BinarySearchTree {
   }
 
   remove(data) {
+
+    let nodeForRemove = this.find(data);
+
+    if (!nodeForRemove) {
+      return;
+    }
+    if (!nodeForRemove.left && !nodeForRemove.right) {
+      nodeForRemove = null;
+      return;
+    }
+    
+    if (nodeForRemove.left || nodeForRemove.right) {
+      if (nodeForRemove.left) {
+        nodeForRemove.left.left = null;
+        nodeForRemove = nodeForRemove.left;
+      }
+      if (nodeForRemove.right) {
+        nodeForRemove.right.left = null;
+        nodeForRemove = nodeForRemove.right;
+      }
+      return;
+    }
+
+    if (nodeForRemove.left && nodeForRemove.right) {
+      nodeForRemove = nodeForRemove.right.left;
+      nodeForRemove.right.left = null;
+      return;
+    }
 
   }
 
